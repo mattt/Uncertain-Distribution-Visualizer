@@ -1,0 +1,15 @@
+{
+  "originHash" : "d6f04b3409d864a286e2979731ccecac733069589c19558eec9d11c7bf2e0805",
+  "pins" : [
+    {
+      "identity" : "uncertain",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mattt/Uncertain",
+      "state" : {
+        "revision" : "6a3ebe7ac0ba64cbd27cb1d9b5bb5da1ad3a99bd",
+        "version" : "1.2.0"
+      }
+    }
+  ],
+  "version" : 3
+}
