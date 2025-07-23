@@ -84,6 +84,8 @@ struct DetailView: View {
                         ExponentialDistributionView(sampleCount: sampleCount)
                     case .kumaraswamy:
                         KumaraswamyDistributionView(sampleCount: sampleCount)
+                    case .rayleigh:
+                        RayleighDistributionView(sampleCount: sampleCount)
                     case .bernoulli:
                         BernoulliDistributionView(sampleCount: sampleCount)
                     case .binomial:
@@ -116,6 +118,9 @@ struct DetailView: View {
         case .kumaraswamy:
             return
                 "A flexible distribution on [0,1] with two shape parameters. Alternative to Beta distribution with simpler sampling."
+        case .rayleigh:
+            return
+                "Models the magnitude of a 2D vector whose components are normally distributed. Commonly used for modeling distances from a center point, such as GPS uncertainty."
         case .bernoulli:
             return
                 "Models a single yes/no trial with a given probability of success. Foundation for other discrete distributions."
@@ -357,6 +362,52 @@ struct KumaraswamyDistributionView: View {
 
     private func updateSamples() {
         let distribution = Uncertain.kumaraswamy(a: alpha, b: beta)
+        samples = Array(distribution.prefix(sampleCount))
+        histogram = createHistogram(from: samples, binCount: 30)
+    }
+}
+
+// MARK: - Rayleigh Distribution
+
+struct RayleighDistributionView: View {
+    let sampleCount: Int
+    @State private var scale: Double = 1.0
+    @State private var samples: [Double] = []
+    @State private var histogram: [HistogramBin] = []
+
+    var body: some View {
+        VStack(spacing: 16) {
+            ParameterControls {
+                SliderControl(
+                    label: "Scale (σ)",
+                    value: $scale,
+                    range: 0.1...3.0,
+                    format: "%.1f"
+                )
+            }
+
+            Chart(histogram, id: \.midpoint) { bin in
+                BarMark(
+                    x: .value("Value", bin.midpoint),
+                    y: .value("Frequency", bin.frequency)
+                )
+                .foregroundStyle(.pink.opacity(0.7))
+            }
+            .frame(height: 300)
+            .chartXAxisLabel("Value")
+            .chartYAxisLabel("Frequency")
+            .chartXScale(domain: 0...max(6.0, scale * 3))
+            .chartYScale(domain: 0...(sampleCount / 4))
+
+            StatisticsView(samples: samples)
+        }
+        .onAppear { updateSamples() }
+        .onChange(of: scale) { updateSamples() }
+        .onChange(of: sampleCount) { updateSamples() }
+    }
+
+    private func updateSamples() {
+        let distribution = Uncertain.rayleigh(scale: scale)
         samples = Array(distribution.prefix(sampleCount))
         histogram = createHistogram(from: samples, binCount: 30)
     }
