@@ -40,6 +40,13 @@ to help users develop intuition about statistical distributions.
   <img alt="Kumaraswamy distribution" src="./Assets/kumaraswamy-light.png">
 </picture>
 
+### Rayleigh Distribution
+
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="./Assets/rayleigh-dark.png">
+  <img alt="Rayleigh distribution" src="./Assets/rayleigh-light.png">
+</picture>
+
 ### Bernoulli Distribution
 
 <picture>
